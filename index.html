@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fabi Webdesigner — Design que conta histórias</title>
+  <meta name="description" content="Portfólio de Fabi Webdesigner. Sites criativos, elegantes e com identidade própria para marcas que querem se destacar.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;1,9..144,200;1,9..144,300;1,9..144,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:       #f4efe5;
+      --ink:      #1a1a18;
+      --card:     #faf8f3;
+      --muted:    #7a7570;
+      --border:   #ddd8cf;
+      --lime:     #b5d99c;
+      --lime-dark:#7ab85a;
+      --rose:     #c44569;
+      --rose-light:#f0b8c8;
+      --cream:    #f9f4e8;
+
+      --font-display: "Fraunces", Georgia, serif;
+      --font-sans: "DM Sans", system-ui, sans-serif;
+      --font-mono: "JetBrains Mono", monospace;
+
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--font-sans);
+      line-height: 1.6;
+      overflow-x: hidden;
+      background-image: radial-gradient(circle at 1px 1px, rgba(26,26,24,0.055) 1px, transparent 0);
+      background-size: 22px 22px;
+    }
+
+    h1,h2,h3,h4 { font-family: var(--font-display); letter-spacing: -0.03em; line-height: 1.05; }
+
+    /* ─── NOISE OVERLAY ─── */
+    .grain::after {
+      content:""; position:absolute; inset:0; pointer-events:none;
+      background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.3'/></svg>");
+      mix-blend-mode: multiply; opacity:0.15; border-radius: inherit;
+    }
+
+    /* ─── ANIMATIONS ─── */
+    @keyframes ticker { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+    @keyframes float  { 0%,100%{transform:translateY(0) rotate(0deg)} 50%{transform:translateY(-12px) rotate(3deg)} }
+    @keyframes spin   { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes pulse  { 0%,100%{transform:scale(1)} 50%{transform:scale(1.08)} }
+    @keyframes blink  { 0%,100%{opacity:1} 50%{opacity:0} }
+
+    .ticker-track { animation: ticker 28s linear infinite; }
+    .float        { animation: float 7s ease-in-out infinite; }
+    .spin-slow    { animation: spin 18s linear infinite; }
+    .fade-up      { animation: fadeUp 0.7s var(--ease-out) both; }
+    .fade-up-2    { animation: fadeUp 0.7s 0.12s var(--ease-out) both; }
+    .fade-up-3    { animation: fadeUp 0.7s 0.24s var(--ease-out) both; }
+
+    /* ─── NAV ─── */
+    header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+      background: rgba(244,239,229,0.75);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      max-width: 82rem; margin: 0 auto;
+      padding: 0 1.75rem;
+      height: 62px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .logo {
+      font-family: var(--font-display); font-size: 1.35rem;
+      color: var(--ink); text-decoration: none; display: flex; align-items: center; gap: 8px;
+    }
+    .logo-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--rose); display:inline-block; animation: pulse 2.5s ease-in-out infinite; }
+    nav a { color: var(--ink); text-decoration: none; font-size: 0.9rem; font-weight: 500; opacity: 0.75; transition: opacity 0.15s; }
+    nav a:hover { opacity: 1; }
+    .nav-links { display: flex; align-items: center; gap: 2rem; }
+    .btn-nav {
+      display: inline-flex; align-items: center; gap: 7px;
+      background: var(--ink); color: var(--bg);
+      padding: 0.5rem 1.25rem; border-radius: 100px;
+      font-size: 0.85rem; font-weight: 500;
+      text-decoration: none; transition: opacity 0.2s, transform 0.2s;
+    }
+    .btn-nav:hover { opacity: 0.85; transform: translateY(-1px); }
+    .hamburger {
+      display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 6px;
+    }
+    .hamburger span { display: block; width: 22px; height: 2px; background: var(--ink); border-radius: 2px; transition: all 0.25s; }
+    .mobile-menu {
+      display: none; flex-direction: column; gap: 0;
+      background: var(--bg); border-top: 1px solid var(--border);
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a { padding: 1rem 1.75rem; font-size: 1.05rem; color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--border); font-weight: 500; }
+    .mobile-menu .btn-mobile { margin: 1rem 1.75rem; display:inline-flex; align-items:center; justify-content:center; background:var(--ink); color:var(--bg); padding:0.75rem; border-radius:100px; font-weight:500; text-decoration:none; }
+
+    /* ─── HERO ─── */
+    .hero {
+      padding: 10rem 1.75rem 5.5rem;
+      max-width: 82rem; margin: 0 auto;
+    }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: var(--font-mono); font-size: 0.72rem;
+      text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted);
+      margin-bottom: 2rem;
+    }
+    .eyebrow-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--rose); animation: blink 2s ease-in-out infinite; }
+    .hero h1 {
+      font-size: clamp(3.2rem, 10.5vw, 10.5rem);
+      line-height: 0.9;
+      letter-spacing: -0.04em;
+    }
+    .hero h1 em { font-style: italic; font-weight: 300; color: var(--rose); }
+    .highlight-wrap { position: relative; display: inline-block; }
+    .highlight-bar {
+      position: absolute; left: -2px; right: -2px; bottom: 4px;
+      height: 0.38em; background: var(--lime); z-index: -1; border-radius: 4px;
+    }
+    .hero-bottom {
+      margin-top: 3rem;
+      display: grid; grid-template-columns: 1fr auto;
+      gap: 2rem; align-items: end;
+    }
+    .hero-desc { font-size: 1.1rem; color: var(--muted); max-width: 38rem; line-height: 1.65; }
+    .hero-desc strong { color: var(--ink); }
+    .hero-stats { display: flex; gap: 2rem; }
+    .stat-num { font-family: var(--font-display); font-size: 2.5rem; line-height: 1; }
+    .stat-label { font-family: var(--font-mono); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-top: 2px; }
+    .hero-badge {
+      position: absolute; right: 3.5rem; top: 11.5rem;
+      width: 130px; height: 130px; border-radius: 50%;
+      background: var(--ink); color: var(--bg);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-mono); font-size: 0.62rem;
+      text-transform: uppercase; letter-spacing: 0.08em;
+      cursor: default;
+    }
+    .badge-inner { position: relative; display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; }
+    .badge-ring { position: absolute; inset: 6px; border-radius: 50%; border: 1px dashed rgba(244,239,229,0.35); }
+    .badge-icon { width: 28px; height: 28px; fill: var(--lime); position: absolute; }
+    .badge-text { position: absolute; bottom: 14px; font-size: 0.6rem; letter-spacing: 0.06em; opacity: 0.7; }
+
+    /* ─── TICKER ─── */
+    .ticker-wrap {
+      border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+      background: var(--ink); overflow: hidden; padding: 1.1rem 0;
+    }
+    .ticker-track {
+      display: flex; white-space: nowrap; gap: 2.5rem;
+      font-family: var(--font-display); font-size: clamp(2rem, 5vw, 3.8rem);
+      color: var(--bg);
+    }
+    .ticker-track .sep { color: var(--lime); }
+    .ticker-track em { font-style: italic; font-weight: 300; color: var(--rose-light); }
+
+    /* ─── SECTION STRUCTURE ─── */
+    .section { max-width: 82rem; margin: 0 auto; padding: 5.5rem 1.75rem; }
+    .section-label {
+      font-family: var(--font-mono); font-size: 0.7rem; text-transform: uppercase;
+      letter-spacing: 0.1em; color: var(--muted); margin-bottom: 0.75rem;
+    }
+    .section-h2 { font-size: clamp(2.8rem, 6vw, 5.5rem); letter-spacing: -0.04em; }
+
+    /* ─── WORKS ─── */
+    #trabalhos { border-top: 1px solid var(--border); }
+    .works-header { display: flex; align-items: flex-end; justify-content: space-between; gap: 2rem; margin-bottom: 3rem; flex-wrap: wrap; }
+    .works-sub { max-width: 22rem; color: var(--muted); font-size: 0.95rem; }
+    .view-all { display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--ink); padding-bottom: 2px; transition: opacity 0.15s; }
+    .view-all:hover { opacity: 0.55; }
+
+    .projects-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;
+    }
+    .project-card {
+      position: relative; overflow: hidden; border-radius: 18px;
+      padding: 2rem; min-height: 320px;
+      display: flex; flex-direction: column; justify-content: space-between;
+      cursor: pointer; transition: transform 0.3s var(--ease-out);
+      text-decoration: none;
+    }
+    .project-card:hover { transform: translateY(-4px); }
+    .project-card.tall { min-height: 640px; grid-row: span 2; }
+    .project-card.wide { grid-column: span 2; }
+    .project-card.rose  { background: var(--rose); color: #fff3f6; }
+    .project-card.lime  { background: var(--lime); color: var(--ink); }
+    .project-card.dark  { background: var(--ink); color: var(--bg); }
+    .project-card.cream { background: var(--cream); color: var(--ink); border: 1px solid var(--border); }
+
+    .project-meta {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      font-family: var(--font-mono); font-size: 0.68rem;
+      text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.7;
+    }
+    .project-name {
+      font-family: var(--font-display); font-size: clamp(2.4rem, 5vw, 5rem);
+      letter-spacing: -0.04em; line-height: 0.92; margin-top: auto;
+    }
+    .project-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 0.85rem; font-weight: 500; margin-top: 1.25rem;
+      opacity: 0.8; transition: opacity 0.15s, gap 0.2s;
+    }
+    .project-card:hover .project-link { opacity: 1; gap: 10px; }
+    .project-link svg { width: 14px; height: 14px; }
+
+    /* ─── SERVICES ─── */
+    #servicos { background: var(--ink); color: var(--bg); }
+    #servicos .section-label { color: rgba(244,239,229,0.45); }
+    .services-grid {
+      margin-top: 3.5rem;
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px;
+      background: rgba(255,255,255,0.1); border-radius: 18px; overflow: hidden;
+    }
+    .service-card {
+      padding: 2.5rem 2rem; background: var(--ink);
+      transition: background 0.2s;
+    }
+    .service-card:hover { background: rgba(255,255,255,0.04); }
+    .service-icon { width: 40px; height: 40px; margin-bottom: 2.5rem; color: var(--lime); }
+    .service-num { font-family: var(--font-mono); font-size: 0.68rem; opacity: 0.4; float: right; margin-top: -2.5rem; letter-spacing: 0.08em; }
+    .service-name { font-family: var(--font-display); font-size: clamp(1.6rem, 3vw, 2.2rem); margin-bottom: 0.6rem; }
+    .service-desc { font-size: 0.9rem; color: rgba(244,239,229,0.55); line-height: 1.6; }
+
+    /* ─── PROCESS ─── */
+    #processo { border-top: 1px solid var(--border); }
+    .process-list { margin-top: 3.5rem; display: flex; flex-direction: column; }
+    .process-item {
+      display: grid; grid-template-columns: 60px 1fr auto; gap: 1.5rem;
+      align-items: center; padding: 1.75rem 0; border-bottom: 1px solid var(--border);
+      cursor: default; transition: background 0.2s;
+    }
+    .process-item:hover .process-title { color: var(--rose); }
+    .process-step { font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.08em; color: var(--muted); text-transform: uppercase; }
+    .process-title { font-family: var(--font-display); font-size: clamp(1.5rem, 3.5vw, 2.4rem); letter-spacing: -0.03em; transition: color 0.2s; }
+    .process-desc { font-size: 0.9rem; color: var(--muted); max-width: 26rem; }
+    .process-arrow { width: 28px; height: 28px; color: var(--muted); transition: transform 0.2s, color 0.2s; }
+    .process-item:hover .process-arrow { transform: translate(4px, -4px); color: var(--rose); }
+
+    /* ─── SOBRE ─── */
+    #sobre { border-top: 1px solid var(--border); }
+    .about-grid { display: grid; grid-template-columns: 5fr 7fr; gap: 4rem; align-items: center; }
+    .about-visual {
+      aspect-ratio: 4/5; border-radius: 24px; position: relative; overflow: hidden;
+      background: linear-gradient(145deg, var(--rose) 0%, #e8847a 50%, var(--lime) 100%);
+    }
+    .about-quote {
+      position: absolute; bottom: 1.75rem; left: 1.5rem; right: 1.5rem;
+      font-family: var(--font-display); font-size: 1.5rem; line-height: 1.25;
+      color: rgba(255,255,255,0.95); letter-spacing: -0.02em;
+    }
+    .about-quote em { font-style: italic; font-weight: 300; }
+    .about-sticker {
+      position: absolute; bottom: -1.5rem; right: -1.5rem;
+      width: 100px; height: 100px; border-radius: 50%;
+      background: var(--lime); display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-mono); font-size: 0.65rem; text-transform: uppercase;
+      letter-spacing: 0.06em; transform: rotate(12deg); cursor: default;
+    }
+    .about-label { margin-bottom: 0.75rem; }
+    .about-h2 { margin-bottom: 1.75rem; }
+    .about-body { color: var(--muted); font-size: 1.05rem; line-height: 1.7; display: flex; flex-direction: column; gap: 1rem; }
+    .about-body strong { color: var(--ink); }
+    .skills-grid {
+      margin-top: 2.25rem; padding-top: 1.75rem; border-top: 1px solid var(--border);
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.6rem;
+    }
+    .skill-pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-family: var(--font-mono); font-size: 0.72rem; color: var(--muted);
+    }
+    .skill-pill::before { content: "—"; color: var(--lime-dark); }
+
+    /* ─── TESTIMONIALS ─── */
+    #depoimentos { border-top: 1px solid var(--border); background: var(--cream); }
+    .testimonials-grid { margin-top: 3rem; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+    .testi-card {
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 16px; padding: 1.75rem;
+    }
+    .testi-quote { font-family: var(--font-display); font-size: 1.15rem; line-height: 1.4; letter-spacing: -0.02em; margin-bottom: 1.25rem; }
+    .testi-quote em { font-style: italic; font-weight: 300; color: var(--rose); }
+    .testi-author { display: flex; align-items: center; gap: 10px; }
+    .testi-avatar {
+      width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-mono); font-size: 0.7rem; font-weight: 500; color: var(--bg);
+    }
+    .testi-name { font-size: 0.85rem; font-weight: 500; }
+    .testi-role { font-size: 0.78rem; color: var(--muted); font-family: var(--font-mono); }
+    .stars { display: flex; gap: 3px; margin-bottom: 1rem; }
+    .star { width: 12px; height: 12px; fill: var(--rose); }
+
+    /* ─── FAQ ─── */
+    #faq { border-top: 1px solid var(--border); }
+    .faq-grid { display: grid; grid-template-columns: 1fr 1.5fr; gap: 5rem; align-items: start; }
+    .faq-sticky { position: sticky; top: 5.5rem; }
+    .faq-list { margin-top: 0; }
+    .faq-item { border-bottom: 1px solid var(--border); }
+    .faq-q {
+      width: 100%; background: none; border: none; text-align: left; cursor: pointer;
+      padding: 1.4rem 0; display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+      font-family: var(--font-sans); font-size: 1.05rem; font-weight: 500; color: var(--ink);
+    }
+    .faq-q svg { width: 18px; height: 18px; flex-shrink: 0; transition: transform 0.25s; color: var(--muted); }
+    .faq-item.open .faq-q svg { transform: rotate(45deg); color: var(--rose); }
+    .faq-a { font-size: 0.95rem; color: var(--muted); line-height: 1.7; max-height: 0; overflow: hidden; transition: max-height 0.35s var(--ease-out), padding 0.25s; }
+    .faq-item.open .faq-a { max-height: 300px; padding-bottom: 1.25rem; }
+
+    /* ─── CTA ─── */
+    #contato { border-top: 1px solid var(--border); }
+    .cta-box {
+      background: var(--lime); border-radius: 24px;
+      padding: clamp(2.5rem, 7vw, 5rem);
+      position: relative; overflow: hidden;
+    }
+    .cta-label { margin-bottom: 1rem; color: rgba(26,26,24,0.5); }
+    .cta-h2 {
+      font-family: var(--font-display);
+      font-size: clamp(3rem, 8.5vw, 8rem);
+      letter-spacing: -0.04em; line-height: 0.88;
+      color: var(--ink); max-width: 14ch;
+    }
+    .cta-h2 em { font-style: italic; font-weight: 200; }
+    .cta-actions { margin-top: 2.5rem; display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap; }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--ink); color: var(--bg);
+      padding: 0.875rem 1.75rem; border-radius: 100px;
+      font-size: 0.95rem; font-weight: 500; text-decoration: none;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    .btn-primary:hover { opacity: 0.82; transform: translateY(-2px); }
+    .btn-primary svg { width: 14px; height: 14px; }
+    .btn-ghost {
+      display: inline-flex; align-items: center; gap: 8px;
+      color: var(--ink); font-family: var(--font-mono); font-size: 0.72rem;
+      text-transform: uppercase; letter-spacing: 0.1em; text-decoration: none;
+      opacity: 0.65; transition: opacity 0.15s;
+    }
+    .btn-ghost:hover { opacity: 1; }
+    .cta-deco {
+      position: absolute; right: -2rem; bottom: -2rem;
+      width: 200px; height: 200px; border-radius: 50%;
+      background: rgba(26,26,24,0.06); pointer-events: none;
+    }
+    .cta-deco-2 {
+      position: absolute; right: 5rem; bottom: 3rem;
+      width: 80px; height: 80px; border-radius: 50%;
+      background: rgba(26,26,24,0.06); pointer-events: none;
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem 1.75rem;
+    }
+    .footer-inner {
+      max-width: 82rem; margin: 0 auto;
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;
+    }
+    .footer-copy { font-family: var(--font-mono); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); }
+    .footer-links { display: flex; gap: 1.5rem; }
+    .footer-links a { font-family: var(--font-mono); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); text-decoration: none; transition: color 0.15s; }
+    .footer-links a:hover { color: var(--ink); }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 1024px) {
+      .hero-badge { display: none; }
+      .faq-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .faq-sticky { position: static; }
+    }
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+      .hero { padding: 7rem 1.25rem 3.5rem; }
+      .hero-bottom { grid-template-columns: 1fr; gap: 1.5rem; }
+      .hero-stats { justify-content: flex-start; }
+      .projects-grid { grid-template-columns: 1fr; }
+      .project-card.tall { min-height: 340px; grid-row: span 1; }
+      .project-card.wide { grid-column: span 1; }
+      .services-grid { grid-template-columns: 1fr; }
+      .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .testimonials-grid { grid-template-columns: 1fr; }
+      .section { padding: 4rem 1.25rem; }
+      .process-item { grid-template-columns: 50px 1fr; }
+      .process-desc { display: none; }
+      .process-arrow { display: none; }
+      .skills-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 480px) {
+      .works-header { flex-direction: column; align-items: flex-start; }
+      .testimonials-grid { grid-template-columns: 1fr; }
+      .cta-actions { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════ NAV ═══════════════ -->
+<header>
+  <div class="nav-inner">
+    <a href="#" class="logo">
+      <span class="logo-dot"></span>
+      fabi<i>.</i>
+    </a>
+    <div class="nav-links">
+      <nav style="display:flex;align-items:center;gap:2rem;">
+        <a href="#trabalhos">Trabalhos</a>
+        <a href="#servicos">Serviços</a>
+        <a href="#sobre">Sobre</a>
+        <a href="#depoimentos">Depoimentos</a>
+      </nav>
+      <a href="#contato" class="btn-nav">
+        Vamos conversar
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+      </a>
+    </div>
+    <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#trabalhos" onclick="toggleMenu()">Trabalhos</a>
+    <a href="#servicos" onclick="toggleMenu()">Serviços</a>
+    <a href="#sobre" onclick="toggleMenu()">Sobre</a>
+    <a href="#depoimentos" onclick="toggleMenu()">Depoimentos</a>
+    <a href="#contato" class="btn-mobile" onclick="toggleMenu()">Vamos conversar →</a>
+  </div>
+</header>
+
+<!-- ═══════════════ HERO ═══════════════ -->
+<section style="position:relative;">
+  <div class="hero">
+    <div class="hero-eyebrow fade-up">
+      <span class="eyebrow-dot"></span>
+      Portfólio · 2026 · Disponível para novos projetos
+    </div>
+
+    <h1 class="fade-up-2">
+      Design que <em>respira</em>,<br>
+      sites que
+      <span class="highlight-wrap">
+        <span>vendem</span>
+        <span class="highlight-bar"></span>
+      </span>.
+    </h1>
+
+    <div class="hero-bottom fade-up-3">
+      <p class="hero-desc">
+        Sou <strong>Fabi</strong>, web designer especializada em criar marcas digitais
+        memoráveis. Cada projeto é uma história contada com tipografia, cor e código.
+      </p>
+      <div class="hero-stats">
+        <div>
+          <div class="stat-num">60+</div>
+          <div class="stat-label">projetos</div>
+        </div>
+        <div>
+          <div class="stat-num">7</div>
+          <div class="stat-label">anos</div>
+        </div>
+        <div>
+          <div class="stat-num">100%</div>
+          <div class="stat-label">dedicação</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating badge (desktop) -->
+  <div class="hero-badge float" style="position:absolute;">
+    <div class="badge-inner">
+      <span class="badge-ring"></span>
+      <svg class="badge-icon" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      <span class="badge-text">premium · craft</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ TICKER ═══════════════ -->
+<div class="ticker-wrap">
+  <div class="ticker-track">
+    <span style="display:inline-flex;align-items:center;gap:2.5rem;flex-shrink:0;">
+      Branding<span class="sep">✺</span>
+      <em>Web Design</em><span class="sep">✺</span>
+      Identidade<span class="sep">✺</span>
+      <em>UI / UX</em><span class="sep">✺</span>
+      Motion<span class="sep">✺</span>
+      <em>Estratégia</em><span class="sep">✺</span>
+      E-commerce<span class="sep">✺</span>
+      <em>Framer</em><span class="sep">✺</span>
+    </span>
+    <span style="display:inline-flex;align-items:center;gap:2.5rem;flex-shrink:0;">
+      Branding<span class="sep">✺</span>
+      <em>Web Design</em><span class="sep">✺</span>
+      Identidade<span class="sep">✺</span>
+      <em>UI / UX</em><span class="sep">✺</span>
+      Motion<span class="sep">✺</span>
+      <em>Estratégia</em><span class="sep">✺</span>
+      E-commerce<span class="sep">✺</span>
+      <em>Framer</em><span class="sep">✺</span>
+    </span>
+  </div>
+</div>
+
+<!-- ═══════════════ TRABALHOS ═══════════════ -->
+<section id="trabalhos">
+  <div class="section">
+    <div class="works-header">
+      <div>
+        <p class="section-label">/ 01 — Trabalhos selecionados</p>
+        <h2 class="section-h2">Projetos recentes.</h2>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:1rem;flex-wrap:wrap;">
+        <p class="works-sub">Uma seleção dos últimos trabalhos — entre marcas independentes e estúdios criativos.</p>
+        <a href="#" class="view-all">Ver todos os projetos →</a>
+      </div>
+    </div>
+
+    <div class="projects-grid">
+      <!-- Projeto 01 — Brilho do Sol (tall) -->
+      <a href="https://fabianaju.github.io/brilhodosolsalaodebeleza/" target="_blank" rel="noopener" class="project-card tall grain" style="background:linear-gradient(150deg,#c9a96e 0%,#e8c98a 55%,#f5e6c0 100%);color:#2a1a08;">
+        <div class="project-meta" style="color:rgba(42,26,8,0.55)">
+          <span>01</span>
+          <span>Salão · Site institucional</span>
+        </div>
+        <div>
+          <div style="font-family:var(--font-mono);font-size:0.68rem;text-transform:uppercase;letter-spacing:0.1em;opacity:0.5;margin-bottom:0.5rem;">Cantagalo, PR</div>
+          <h3 class="project-name" style="color:#2a1a08;">Brilho<br>do Sol</h3>
+          <p style="margin-top:0.75rem;font-size:0.88rem;opacity:0.65;max-width:18rem;line-height:1.5;">Salão de beleza premium com agendamento online, calculadora de serviços e galeria antes & depois.</p>
+          <div class="project-link" style="color:#2a1a08;">
+            Ver projeto
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+          </div>
+        </div>
+      </a>
+
+      <!-- Projeto 02 — Iron Pulse -->
+      <a href="https://fabianaju.github.io/academiaironpulse/" target="_blank" rel="noopener" class="project-card grain" style="background:linear-gradient(145deg,#1a1a18 0%,#2d2d2a 100%);color:var(--bg);">
+        <div class="project-meta" style="color:rgba(244,239,229,0.45)">
+          <span>02</span>
+          <span>Academia · Landing Page</span>
+        </div>
+        <div>
+          <div style="font-family:var(--font-mono);font-size:0.68rem;text-transform:uppercase;letter-spacing:0.1em;color:#f5a623;margin-bottom:0.5rem;opacity:0.85;">⚡ Premium Fitness</div>
+          <h3 class="project-name" style="color:#f5a623;line-height:0.88;">Iron<br>Pulse</h3>
+          <p style="margin-top:0.75rem;font-size:0.88rem;opacity:0.55;max-width:18rem;line-height:1.5;">Academia premium com planos, contador regressivo, transformações e seção de agendamento.</p>
+          <div class="project-link" style="color:var(--bg);">
+            Ver projeto
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+          </div>
+        </div>
+      </a>
+
+      <!-- Projeto 03 — Dolce Heaven -->
+      <a href="https://fabianaju.github.io/dolce/" target="_blank" rel="noopener" class="project-card grain" style="background:linear-gradient(145deg,#f2e4f7 0%,#fce8f0 60%,#fdf0e8 100%);color:#3a1a2e;">
+        <div class="project-meta" style="color:rgba(58,26,46,0.45)">
+          <span>03</span>
+          <span>Confeitaria · E-commerce</span>
+        </div>
+        <div>
+          <div style="font-family:var(--font-mono);font-size:0.68rem;text-transform:uppercase;letter-spacing:0.1em;opacity:0.5;margin-bottom:0.5rem;">Artesanal · Premium</div>
+          <h3 class="project-name" style="color:#3a1a2e;">Dolce<br>Heaven</h3>
+          <p style="margin-top:0.75rem;font-size:0.88rem;opacity:0.6;max-width:18rem;line-height:1.5;">Confeitaria artesanal com carrinho de compras, catálogo de produtos e galeria de criações.</p>
+          <div class="project-link" style="color:#3a1a2e;">
+            Ver projeto
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ SERVIÇOS ═══════════════ -->
+<section id="servicos" style="background:var(--ink);color:var(--bg)">
+  <div class="section">
+    <p class="section-label">/ 02 — Como posso ajudar</p>
+    <h2 class="section-h2">
+      Serviços <em style="font-style:italic;font-weight:300;color:var(--lime)">completos</em>.
+    </h2>
+
+    <div class="services-grid">
+      <div class="service-card">
+        <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>
+        <span class="service-num">01</span>
+        <h3 class="service-name">Identidade Visual</h3>
+        <p class="service-desc">Marca, paleta e sistema visual com personalidade e coerência em todos os pontos de contato.</p>
+      </div>
+      <div class="service-card">
+        <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 5.5A3.5 3.5 0 0 1 8.5 2H12v7H8.5A3.5 3.5 0 0 1 5 5.5z"/><path d="M12 2h3.5a3.5 3.5 0 1 1 0 7H12V2z"/><path d="M12 12.5a3.5 3.5 0 1 1 7 0 3.5 3.5 0 1 1-7 0z"/><path d="M5 19.5A3.5 3.5 0 0 1 8.5 16H12v3.5a3.5 3.5 0 1 1-7 0z"/><path d="M5 12.5A3.5 3.5 0 0 1 8.5 9H12v7H8.5A3.5 3.5 0 0 1 5 12.5z"/></svg>
+        <span class="service-num">02</span>
+        <h3 class="service-name">UI/UX Design</h3>
+        <p class="service-desc">Interfaces que convertem e encantam — fluxos pensados para a experiência real do usuário.</p>
+      </div>
+      <div class="service-card">
+        <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        <span class="service-num">03</span>
+        <h3 class="service-name">Desenvolvimento</h3>
+        <p class="service-desc">Sites rápidos, responsivos e bem indexados. Webflow, Framer, React ou código nativo.</p>
+      </div>
+      <div class="service-card">
+        <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/></svg>
+        <span class="service-num">04</span>
+        <h3 class="service-name">Motion & Detalhe</h3>
+        <p class="service-desc">Micro-interações e animações que dão vida, alma e caráter à experiência digital.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ PROCESSO ═══════════════ -->
+<section id="processo">
+  <div class="section">
+    <p class="section-label">/ 03 — Como trabalho</p>
+    <h2 class="section-h2">O processo.</h2>
+
+    <div class="process-list">
+      <div class="process-item">
+        <span class="process-step">01</span>
+        <div>
+          <h3 class="process-title">Descoberta</h3>
+          <p class="process-desc">Entendo o negócio, o público e os objetivos antes de abrir o Figma.</p>
+        </div>
+        <svg class="process-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+      </div>
+      <div class="process-item">
+        <span class="process-step">02</span>
+        <div>
+          <h3 class="process-title">Estratégia</h3>
+          <p class="process-desc">Definimos identidade, paleta, tom de voz e arquitetura da informação.</p>
+        </div>
+        <svg class="process-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+      </div>
+      <div class="process-item">
+        <span class="process-step">03</span>
+        <div>
+          <h3 class="process-title">Design</h3>
+          <p class="process-desc">Prototipo as telas, itero com feedback e refino cada detalhe visual.</p>
+        </div>
+        <svg class="process-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+      </div>
+      <div class="process-item">
+        <span class="process-step">04</span>
+        <div>
+          <h3 class="process-title">Desenvolvimento</h3>
+          <p class="process-desc">Construo o site com foco em performance, acessibilidade e SEO.</p>
+        </div>
+        <svg class="process-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+      </div>
+      <div class="process-item" style="border-bottom:none;">
+        <span class="process-step">05</span>
+        <div>
+          <h3 class="process-title">Entrega & Suporte</h3>
+          <p class="process-desc">Lançamento, treinamento e suporte pós-entrega para garantir o sucesso.</p>
+        </div>
+        <svg class="process-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ SOBRE ═══════════════ -->
+<section id="sobre">
+  <div class="section">
+    <div class="about-grid">
+      <div>
+        <div class="about-visual grain" style="background:none;overflow:hidden;">
+          <img src="https://fabianaju.github.io/fabiweb/fabiweb.png" alt="Fabi Webdesigner" style="width:100%;height:100%;object-fit:cover;object-position:center top;display:block;border-radius:24px;">
+          <div class="about-quote" style="background:linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 100%);padding:1.5rem;position:absolute;bottom:0;left:0;right:0;border-radius:0 0 24px 24px;">
+            "O detalhe é tudo. <em>É onde mora a magia.</em>"
+          </div>
+        </div>
+        <div class="about-sticker">hi! ✿</div>
+      </div>
+      <div>
+        <p class="section-label about-label">/ 04 — Sobre</p>
+        <h2 class="section-h2 about-h2">
+          Olá, eu sou <em style="font-style:italic;color:var(--rose)">Fabi</em>.
+        </h2>
+        <div class="about-body">
+          <p>
+            Há mais de 7 anos transformo ideias em experiências digitais. Misturo
+            <strong>estratégia, design e código</strong> para entregar sites que vão muito além do bonito.
+          </p>
+          <p>
+            Trabalho com marcas que valorizam personalidade e atenção aos detalhes —
+            porque acredito que um bom design não interrompe, ele <em>convida</em>.
+          </p>
+          <p>
+            Quando não estou criando, estou estudando tendências de tipografia, testando
+            novas ferramentas ou explorando cafeterias em São Paulo.
+          </p>
+        </div>
+        <div class="skills-grid">
+          <span class="skill-pill">Figma</span>
+          <span class="skill-pill">Webflow</span>
+          <span class="skill-pill">React</span>
+          <span class="skill-pill">Framer</span>
+          <span class="skill-pill">Shopify</span>
+          <span class="skill-pill">GSAP</span>
+          <span class="skill-pill">Next.js</span>
+          <span class="skill-pill">Tailwind</span>
+          <span class="skill-pill">Adobe CC</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ DEPOIMENTOS ═══════════════ -->
+<section id="depoimentos">
+  <div class="section">
+    <p class="section-label">/ 05 — O que dizem</p>
+    <h2 class="section-h2">Clientes felizes.</h2>
+
+    <div class="testimonials-grid">
+      <div class="testi-card">
+        <div class="stars">
+          <svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </div>
+        <p class="testi-quote">A Fabi entregou uma identidade visual <em>incrível</em> para o nosso café. As vendas online aumentaram 40% depois do novo site.</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:var(--rose)">MC</div>
+          <div>
+            <div class="testi-name">Marina Cavalcante</div>
+            <div class="testi-role">Café Norte · Fundadora</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testi-card">
+        <div class="stars">
+          <svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </div>
+        <p class="testi-quote">Processo leve, comunicação <em>impecável</em> e resultado final muito acima das expectativas. Recomendo de olhos fechados.</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:var(--lime-dark)">RP</div>
+          <div>
+            <div class="testi-name">Rafael Pires</div>
+            <div class="testi-role">Estúdio Onda · Diretor</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testi-card">
+        <div class="stars">
+          <svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </div>
+        <p class="testi-quote">A atenção ao detalhe da Fabi é <em>rara</em>. Ela entende de branding de verdade e entrega algo com alma.</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:var(--ink)">AL</div>
+          <div>
+            <div class="testi-name">Ana Lima</div>
+            <div class="testi-role">Atelier Lume · CEO</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ FAQ ═══════════════ -->
+<section id="faq">
+  <div class="section">
+    <div class="faq-grid">
+      <div class="faq-sticky">
+        <p class="section-label">/ 06 — Dúvidas</p>
+        <h2 class="section-h2" style="font-size:clamp(2rem,4.5vw,3.8rem)">Perguntas frequentes.</h2>
+        <p style="margin-top:1.25rem;color:var(--muted);font-size:0.95rem;line-height:1.65;">Ficou com dúvida? Me chama no Instagram ou por e-mail — respondo rápido.</p>
+        <a href="#contato" class="btn-primary" style="margin-top:1.75rem;display:inline-flex;">
+          Falar com a Fabi
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+        </a>
+      </div>
+
+      <div class="faq-list">
+        <div class="faq-item open">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            Qual é o prazo médio de entrega?
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </button>
+          <div class="faq-a">Projetos de identidade visual levam de 2 a 3 semanas. Sites completos (design + desenvolvimento) costumam ficar prontos entre 4 e 8 semanas, dependendo da complexidade e da velocidade de feedback.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            Vocês trabalha com contratos ou NF?
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </button>
+          <div class="faq-a">Sim! Todo projeto tem contrato detalhado e emissão de nota fiscal. Trabalho com MEI e também atendo pessoas físicas com recibo formal.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            Posso editar o site depois da entrega?
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </button>
+          <div class="faq-a">Com certeza. Entrego sempre com um vídeo tutorial de edição e uma sessão ao vivo de treinamento. Sites em Webflow e Framer permitem edições bem intuitivas sem precisar de programação.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            Quais formas de pagamento aceita?
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </button>
+          <div class="faq-a">Aceito PIX, transferência bancária e cartão de crédito. O pagamento é dividido: 50% no início e 50% na entrega final aprovada.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            Atende clientes de fora do Brasil?
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </button>
+          <div class="faq-a">Sim! Atendo clientes do mundo todo. Trabalho remotamente e tenho experiência com equipes em fusos horários diferentes. Comunicação pode ser em português, inglês ou espanhol.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ CTA / CONTATO ═══════════════ -->
+<section id="contato">
+  <div class="section">
+    <div class="cta-box grain">
+      <div class="cta-deco"></div>
+      <div class="cta-deco-2"></div>
+      <div style="position:relative;">
+        <p class="section-label cta-label">/ 07 — Próximo projeto</p>
+        <h2 class="cta-h2">
+          Vamos criar algo <em>inesquecível</em>?
+        </h2>
+        <div class="cta-actions">
+          <a href="mailto:ola@fabiwebdesigner.com" class="btn-primary">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+            ola@fabiwebdesigner.com
+          </a>
+          <a href="https://instagram.com/fabi.webdesigner" class="btn-ghost">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
+            @fabi.webdesigner
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ FOOTER ═══════════════ -->
+<footer>
+  <div class="footer-inner">
+    <span class="footer-copy">© 2026 Fabi Webdesigner · Feito com ✺ em São Paulo</span>
+    <div class="footer-links">
+      <a href="#trabalhos">Trabalhos</a>
+      <a href="#servicos">Serviços</a>
+      <a href="#sobre">Sobre</a>
+      <a href="mailto:ola@fabiwebdesigner.com">E-mail</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Mobile menu
+  function toggleMenu() {
+    const menu = document.getElementById('mobileMenu');
+    menu.classList.toggle('open');
+  }
+
+  // FAQ accordion
+  function toggleFaq(btn) {
+    const item = btn.closest('.faq-item');
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  }
+
+  // Scroll-reveal: observe sections for fade-in
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.project-card, .service-card, .testi-card, .process-item').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity 0.55s ease, transform 0.55s ease';
+    observer.observe(el);
+  });
+
+  // Close mobile menu on outside click
+  document.addEventListener('click', function(e) {
+    const header = document.querySelector('header');
+    if (!header.contains(e.target)) {
+      document.getElementById('mobileMenu').classList.remove('open');
+    }
+  });
+</script>
+</body>
+</html>
